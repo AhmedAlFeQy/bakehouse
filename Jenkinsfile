@@ -23,7 +23,7 @@ pipeline {
       steps {
         script {
 
-            withCredentials([file(credentialsId: 'sa', variable: 'key')]) {
+            withCredentials([file(credentialsId: 'key', variable: 'key')]) {
               sh """
                   gcloud auth activate-service-account ${} --key-file ${key}
         
