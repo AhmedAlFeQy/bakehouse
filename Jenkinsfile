@@ -12,6 +12,7 @@ pipeline {
                   docker login -u ${username} -p ${password}
                   docker build -t ahmedalfeqy/vfbakehouse:${BUILD_NUMBER} .
                   docker push ahmedalfeqy/vfbakehouse:${BUILD_NUMBER}
+                  echo ${BUILD_NUMBER} > ../bakehouse-build-number.txt
               """
           }
         } 
@@ -33,7 +34,10 @@ pipeline {
 
             withCredentials([file(credentialsId: 'kube', variable: 'KUBECONFIG')]) {
               sh """
-                  
+                  export BUILD_NUMBER=\$(cat ../bakehouse-build-number.txt)
+                  mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
+                  cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
+                  rm -f Deployment/deploy.yaml.tmp
                   kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
                 """
             }
