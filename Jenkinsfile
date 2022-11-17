@@ -29,7 +29,7 @@ pipeline {
         
                 """
             }
-        }
+        
 
 
             withCredentials([file(credentialsId: 'kube', variable: 'KUBECONFIG')]) {
